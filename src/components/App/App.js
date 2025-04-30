@@ -2,9 +2,23 @@ import styles from './App.module.css';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist'
-import React from "react";
+import React, { useState } from "react";
 
 function App () {
+  const [searchResults, setSearchResults] = useState([
+  {
+    name: 'example name 1',
+    artist: 'examlple artist 1',
+    album: 'example album 1',
+    id: 1,
+  },
+  {
+    name: 'example name 2',
+    artist: 'examlple artist 2',
+    album: 'example album 2',
+    id: 2,
+  },
+]);
     return (
         <div>
         <h1>
@@ -15,9 +29,9 @@ function App () {
           <SearchBar></SearchBar>
           <div className={styles["App-playlist"]}>
             {/* <!-- Add a SearchResults component --> */}
-            <SearchResults></SearchResults>
+            <SearchResults userSearchResults={searchResults} ></SearchResults>
             {/* <!-- Add a Playlist component --> */}
-            <Playlist></Playlist>
+            
           </div>
         </div>
       </div>
