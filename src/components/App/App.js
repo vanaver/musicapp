@@ -8,12 +8,12 @@ function App () {
     return (
         <div>
         <h1>
-          Ja<span className="highlight">mmm</span>ing
+          Ja<span className={styles['highlight']}>mmm</span>ing
         </h1>
-        <div className="App">
+        <div className={styles["App"]}>
           {/* <!-- Add a SearchBar component --> */}
           <SearchBar></SearchBar>
-          <div className="App-playlist">
+          <div className={styles["App-playlist"]}>
             {/* <!-- Add a SearchResults component --> */}
             <SearchResults></SearchResults>
             {/* <!-- Add a Playlist component --> */}

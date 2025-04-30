@@ -4,7 +4,7 @@ import Tracklist from '../Tracklist/Tracklist'
 
 function SearchResults () {
     return (
-        <div className="SearchResults">
+        <div className={styles["SearchResults"]}>
         {/* <!-- Add a TrackList component --> */}
         <Tracklist></Tracklist>
       </div>
