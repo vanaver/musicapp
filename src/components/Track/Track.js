@@ -5,12 +5,15 @@ function Track(props) {
     if (props.isRemoval) {
       return <button className={styles['Track-action']} onClick={passTrack} >+</button>
     } else {
-      return <button className={styles['Track-action']}>-</button>
+      return <button className={styles['Track-action']} onClick={passTrackToRemove} >-</button>
     }
   }
   function passTrack() {
     props.onAdd(props.track)
-  }
+  };
+  function passTrackToRemove(){
+    props.onRemove(props.track)
+  };
   return (
     <div className={styles["Track"]}>
       <div className={styles["Track-information"]}>

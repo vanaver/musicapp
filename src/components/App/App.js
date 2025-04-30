@@ -43,6 +43,19 @@ function App () {
     } else {
       setPlaylistTracks(newTrack);
     }
+  };
+  function removeTrack (track) {
+    const existingTrack = playlistTracks.filter((t) => t.id !== track.id);
+    setPlaylistTracks(existingTrack);
+  };
+  function updatePlaylistName(name) {
+    setPlaylistName(name)
+  };
+  function savePlaylist() {
+    const trackURIs = playlistTracks.map((t) => t.uri)
+  };
+  function search(term) {
+    console.log(term)
   }
 
     return (
@@ -52,12 +65,18 @@ function App () {
         </h1>
         <div className={styles["App"]}>
           {/* <!-- Add a SearchBar component --> */}
-          <SearchBar></SearchBar>
+          <SearchBar onSearch={search} />
           <div className={styles["App-playlist"]}>
             {/* <!-- Add a SearchResults component --> */}
             <SearchResults userSearchResults={searchResults} onAdd={addTrack} ></SearchResults>
             {/* <!-- Add a Playlist component --> */}
-            <Playlist playlistName={playlistName} playlistTracks={playlistTracks} ></Playlist>
+            <Playlist 
+              playlistName={playlistName} 
+              playlistTracks={playlistTracks} 
+              onRemove={removeTrack}
+              onNameChange={updatePlaylistName} 
+              onSave={savePlaylist}
+            />
           </div>
         </div>
       </div>
