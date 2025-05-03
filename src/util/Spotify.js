@@ -1,0 +1,102 @@
+// Spotify.js
+
+const clientId = 'bf9c5e949e0c4bdaa4fca97931606580'; // твой clientId
+const redirectUri = 'https://4dd2-91-246-41-226.ngrok-free.app'; // твой redirect URI
+const scope = "user-read-private user-read-email"; // запрашиваемые права доступа
+
+// Генерация случайной строки
+function generateRandomString(length) {
+  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const values = new Uint32Array(length);
+  window.crypto.getRandomValues(values);
+  for (let i = 0; i < length; i++) {
+    result += charset[values[i] % charset.length];
+  }
+  return result;
+}
+
+// Создание SHA256 хэша
+async function sha256(plain) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plain);
+  return await window.crypto.subtle.digest("SHA-256", data);
+}
+
+// Конвертация хэша в base64url
+function base64urlencode(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const string = String.fromCharCode(...bytes);
+  return btoa(string)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+// Генерация code challenge из code verifier
+async function generateCodeChallenge(codeVerifier) {
+  const hash = await sha256(codeVerifier);
+  return base64urlencode(hash);
+}
+
+// Перенаправление на авторизацию в Spotify
+export async function goToPage() {
+  const codeVerifier = generateRandomString(128);
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+  // Сохраняем code_verifier в localStorage
+  localStorage.setItem("code_verifier", codeVerifier);
+
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: clientId,
+    scope,
+    redirect_uri: redirectUri,
+    code_challenge_method: "S256",
+    code_challenge: codeChallenge,
+  });
+
+  window.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+}
+
+// Получение access_token с помощью authorization code
+export async function checkForCodeAndGetToken() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+
+  if (!code) return;
+
+  const codeVerifier = localStorage.getItem("code_verifier");
+  if (!codeVerifier) {
+    console.error("Нет сохранённого code_verifier");
+    return;
+  }
+
+  const body = new URLSearchParams({
+    client_id: clientId,
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: redirectUri,
+    code_verifier: codeVerifier,
+  });
+
+  try {
+    const response = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: body.toString(),
+    });
+
+    const data = await response.json();
+    console.log("Ответ от Spotify:", data);
+
+    if (data.access_token) {
+      console.log("✅ Access token:", data.access_token);
+      localStorage.setItem("access_token", data.access_token); // сохраняем access_token
+    } else {
+      console.error("❌ Не удалось получить access_token:", data);
+    }
+  } catch (error) {
+    console.error("Ошибка при получении токена:", error);
+  }
+}
