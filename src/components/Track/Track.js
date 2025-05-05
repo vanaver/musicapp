@@ -14,8 +14,10 @@ function Track(props) {
   function passTrackToRemove(){
     props.onRemove(props.track)
   };
+  const imageUrl = props.track.image || "https://via.placeholder.com/64";
   return (
     <div className={styles["Track"]}>
+      <img src={imageUrl} className={styles.imageee}></img>
       <div className={styles["Track-information"]}>
         {/* <h3><!-- track name will go here --></h3> */}
         <h3>{props.track.name}</h3>

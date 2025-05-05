@@ -1,7 +1,7 @@
 // Spotify.js
 
 const clientId = 'bf9c5e949e0c4bdaa4fca97931606580'; // твой clientId
-const redirectUri = 'https://4dd2-91-246-41-226.ngrok-free.app'; // твой redirect URI
+const redirectUri = 'https://900e-91-246-41-226.ngrok-free.app'; // твой redirect URI
 const scope = "user-read-private user-read-email"; // запрашиваемые права доступа
 
 // Генерация случайной строки
@@ -98,5 +98,43 @@ export async function checkForCodeAndGetToken() {
     }
   } catch (error) {
     console.error("Ошибка при получении токена:", error);
+  }
+}
+
+export async function search(term) {
+  const accessToken = localStorage.getItem("access_token");
+
+  if (!accessToken) {
+    console.error("❌ Нет access token. Сначала авторизуйся через Spotify.");
+    return [];
+  }
+
+  const endpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(term)}&type=track`;
+
+  try {
+    const response = await fetch(endpoint, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!data.tracks || !data.tracks.items) {
+      return [];
+    }
+
+    return data.tracks.items.map(track => ({
+      id: track.id,
+      name: track.name,
+      artist: track.artists[0].name,
+      album: track.album.name,
+      uri: track.uri,
+      image: track.album.images[1]?.url || '',
+    }));
+  } catch (error) {
+    console.error("Ошибка при поиске треков:", error);
+    window.alert('вероятно нужно заново войти через спотифай')
+    return [];
   }
 }

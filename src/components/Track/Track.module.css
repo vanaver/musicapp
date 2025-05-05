@@ -24,6 +24,7 @@
     flex-direction: column;
     justify-content: center;
     height: 72px;
+    overflow: hidden;
 }
 
 .Track-information h3 {
@@ -34,4 +35,30 @@
     font-size: .83rem;
     font-weight: 300;
     color: rgba(256, 256, 256, 0.8);
+}
+
+.imageee {
+    width: 50px;
+    padding-right: 10px;
+    border-radius: 8px 8px 8px 8px;
+}
+
+@keyframes scroll-text {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+@media only screen and (max-width: 600px) {
+    .Track-information h3 {
+        animation: scroll-text 4s linear infinite;
+        white-space: nowrap;
+    }
+    .Track-information p {
+        animation: scroll-text 4s linear infinite;
+        white-space: nowrap;
+    }
 }

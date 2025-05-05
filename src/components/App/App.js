@@ -3,7 +3,7 @@ import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 import React, { useState, useEffect } from "react";
-import { goToPage, checkForCodeAndGetToken } from '../../util/Spotify';
+import { goToPage, checkForCodeAndGetToken, search as spotifySearch} from '../../util/Spotify';
 
 function App() {
   useEffect(() => {
@@ -70,14 +70,20 @@ function App() {
 
   function search(term) {
     console.log("Search term:", term);
+    spotifySearch(term).then(results => {
+      setSearchResults(results)
+    })
   }
 
   return (
     <div>
-      <button onClick={goToPage}>Log in with Spotify</button>
+      <div className={styles.topMenu}>
+      <button className={styles.topBtn} onClick={goToPage}>Log in with Spotify</button>
       <h1>
         Ja<span className={styles['highlight']}>mmm</span>ing
       </h1>
+      <div className={styles.fakeDiv} style={{width: "200px"}}></div>
+      </div>
       <div className={styles["App"]}>
         <SearchBar onSearch={search} />
         <div className={styles["App-playlist"]}>
