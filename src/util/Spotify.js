@@ -3,6 +3,7 @@
 const clientId = 'bf9c5e949e0c4bdaa4fca97931606580'; // твой clientId
 const redirectUri = 'https://900e-91-246-41-226.ngrok-free.app'; // твой redirect URI
 const scope = "user-read-private user-read-email"; // запрашиваемые права доступа
+let timeToChangeToken;
 
 // Генерация случайной строки
 function generateRandomString(length) {
@@ -91,8 +92,13 @@ export async function checkForCodeAndGetToken() {
     console.log("Ответ от Spotify:", data);
 
     if (data.access_token) {
+      const now = new Date().getTime();
+      const expiresIn = 3600; // в секундах
+      const expirationTime = Date.now() + expiresIn * 1000;
       console.log("✅ Access token:", data.access_token);
       localStorage.setItem("access_token", data.access_token); // сохраняем access_token
+      localStorage.setItem("access_token_expiration", expirationTime);
+      console.log(expirationTime)
     } else {
       console.error("❌ Не удалось получить access_token:", data);
     }
@@ -121,6 +127,7 @@ export async function search(term) {
     const data = await response.json();
 
     if (!data.tracks || !data.tracks.items) {
+      window.alert('вероятно нужно заново войти через спотифай');
       return [];
     }
 
@@ -131,10 +138,25 @@ export async function search(term) {
       album: track.album.name,
       uri: track.uri,
       image: track.album.images[1]?.url || '',
+      preview: track.preview_url,
     }));
   } catch (error) {
     console.error("Ошибка при поиске треков:", error);
     window.alert('вероятно нужно заново войти через спотифай')
     return [];
+  }
+}
+
+export function isAccessTokenValid() {
+  const token = localStorage.getItem("access_token");
+  const expiration = localStorage.getItem("access_token_expiration");
+  const now = Date.now();
+  if (!token || !expiration) return false;
+  if (now >= expiration) {
+    console.log("Токен истёк. Нужно войти заново.");
+    return false
+  } else {
+    console.log("Токен ещё действителен.");
+    return true
   }
 }

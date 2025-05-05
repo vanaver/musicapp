@@ -23,6 +23,7 @@ function Track(props) {
         <h3>{props.track.name}</h3>
         {/* <p><!-- track artist will go here--> | <!-- track album will go here --></p> */}
         <p>{props.track.artist} / {props.track.album}</p>
+        <p>{props.track.preview}</p>
       </div>
       {/* <button class="Track-action"><!-- + or - will go here --></button> */}
       {renderAction()}
