@@ -164,3 +164,49 @@ export function isAccessTokenValid() {
     return true
   }
 }
+
+export async function getCurrentUserId() {
+  const accessToken = localStorage.getItem("access_token");
+  const endpoint = "https://api.spotify.com/v1/me";
+
+  try {
+    const response = await fetch(endpoint, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const data = await response.json();
+    console.log(data.id + 'получено айди польщователя')
+    return data.id;
+  } catch (error) {
+    console.error("Ошибка при получении ID пользователя:", error);
+    return null;
+  }
+}
+
+export async function createPlaylist(userId, playlistName) {
+  const accessToken = localStorage.getItem("access_token");
+  const endpoint = `https://api.spotify.com/v1/users/${userId}/playlists`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: playlistName,
+        public: false,
+        description: "Создано через Jamming App",
+      }),
+    });
+
+    const data = await response.json();
+    return data.id;
+  } catch (error) {
+    console.error("Ошибка при создании плейлиста:", error);
+    return null;
+  }
+}
