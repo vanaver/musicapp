@@ -15,10 +15,14 @@ function App() {
     }
   }, []);
 
-  const [searchResults, setSearchResults] = useState([{}]);
+  const [searchResults, setSearchResults] = useState([
+    {},
+  ]);
 
   const [playlistName, setPlaylistName] = useState('Example Playlist Name');
-  const [playlistTracks, setPlaylistTracks] = useState([{}]);
+  const [playlistTracks, setPlaylistTracks] = useState([
+    {},
+  ]);
 
   function addTrack(track) {
     const existingTrack = playlistTracks.find(t => t.id === track.id);
