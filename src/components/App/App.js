@@ -70,9 +70,13 @@ function App() {
 
   function search(term) {
     console.log("Search term:", term);
+    if (!isAccessTokenValid()) {
+      window.location.reload();
+    };
     spotifySearch(term).then(results => {
       setSearchResults(results)
-    })
+    });
+    
   }
 
   return (
@@ -83,7 +87,7 @@ function App() {
         Ja<span className={styles['highlight']}>mmm</span>ing
       </h1>
       {!isAccessTokenValid() && (
-  <div className={styles.fakeDiv} style={{ width: "200px" }}></div>
+  <div className={styles.fakeDiv} style={{ width: "177px" }}></div>
 )}
       </div>
       <div className={styles["App"]}>

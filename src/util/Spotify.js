@@ -1,9 +1,8 @@
 // Spotify.js
 
 const clientId = 'bf9c5e949e0c4bdaa4fca97931606580'; // твой clientId
-const redirectUri = 'https://900e-91-246-41-226.ngrok-free.app'; // твой redirect URI
-const scope = "user-read-private user-read-email"; // запрашиваемые права доступа
-let timeToChangeToken;
+const redirectUri = 'https://e358-91-246-41-226.ngrok-free.app'; // твой redirect URI
+const scope = "playlist-modify-public playlist-modify-private user-read-private"; // запрашиваемые права доступа
 
 // Генерация случайной строки
 function generateRandomString(length) {
@@ -99,11 +98,16 @@ export async function checkForCodeAndGetToken() {
       localStorage.setItem("access_token", data.access_token); // сохраняем access_token
       localStorage.setItem("access_token_expiration", expirationTime);
       console.log(expirationTime)
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+      window.location.reload();
     } else {
       console.error("❌ Не удалось получить access_token:", data);
     }
   } catch (error) {
     console.error("Ошибка при получении токена:", error);
+  } finally {
+   
   }
 }
 
