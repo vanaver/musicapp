@@ -3,7 +3,7 @@ import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 import React, { useState, useEffect } from "react";
-import { createPlaylist, getCurrentUserId, goToPage, isAccessTokenValid, checkForCodeAndGetToken, search as spotifySearch} from '../../util/Spotify';
+import { addTracksToPlaylist, createPlaylist, getCurrentUserId, goToPage, isAccessTokenValid, checkForCodeAndGetToken, search as spotifySearch} from '../../util/Spotify';
 
 function App() {
   useEffect(() => {
@@ -43,10 +43,19 @@ function App() {
 
   async function savePlaylist() {
     const trackURIs = playlistTracks.map((t) => t.uri);
+    const validTrackURIs = trackURIs.filter(uri => uri); // убирает undefined/null
     console.log("Saved Playlist URIs:", trackURIs);
     const userId = await getCurrentUserId();
     const playlistId = await createPlaylist(userId, playlistName);
     console.log("Создан плейлист с ID:", playlistId);
+    if (!playlistId) return;
+
+    const success = await addTracksToPlaylist(playlistId, validTrackURIs);
+    if (success) {
+      alert("Плейлист успешно сохранён!");
+      setPlaylistTracks([]); // ✅ Очистка треков
+      setPlaylistName("Новый плейлист"); // ✅ Сброс названия
+    }
   }
 
   function search(term) {

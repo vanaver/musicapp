@@ -210,3 +210,33 @@ export async function createPlaylist(userId, playlistName) {
     return null;
   }
 }
+
+export async function addTracksToPlaylist(playlistId, uris) {
+  const accessToken = localStorage.getItem("access_token");
+  const endpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+  const body = JSON.stringify({ uris });
+
+  console.log("Добавляем треки:", uris); // 💡 покажет массив uri
+  console.log("Тело запроса:", body);    // 💡 покажет JSON
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body,
+    });
+
+    if (!response.ok) {
+      throw new Error("Не удалось добавить треки");
+    }
+
+    console.log("Треки успешно добавлены!");
+    return true;
+  } catch (error) {
+    console.error("Ошибка при добавлении треков:", error);
+    return false;
+  }
+}
