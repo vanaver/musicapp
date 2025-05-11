@@ -1,7 +1,7 @@
 // Spotify.js
 
 const clientId = 'bf9c5e949e0c4bdaa4fca97931606580'; // твой clientId
-const redirectUri = 'https://e358-91-246-41-226.ngrok-free.app'; // твой redirect URI
+const redirectUri = 'https://musicappbe.netlify.app'; // твой redirect URI
 const scope = "playlist-modify-public playlist-modify-private user-read-private"; // запрашиваемые права доступа
 
 // Генерация случайной строки
