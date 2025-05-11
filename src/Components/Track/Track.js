@@ -17,7 +17,7 @@ function Track(props) {
   const imageUrl = props.track.image || "https://via.placeholder.com/64";
   return (
     props.track.name &&(<div className={styles["Track"]}>
-      <img src={imageUrl} className={styles.imageee}></img>
+      <img alt="track img" src={imageUrl} className={styles.imageee}></img>
       <div className={styles["Track-information"]}>
         {/* <h3><!-- track name will go here --></h3> */}
         <h3>{props.track.name}</h3>

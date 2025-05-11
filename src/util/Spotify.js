@@ -91,7 +91,6 @@ export async function checkForCodeAndGetToken() {
     console.log("Ответ от Spotify:", data);
 
     if (data.access_token) {
-      const now = new Date().getTime();
       const expiresIn = 3600; // в секундах
       const expirationTime = Date.now() + expiresIn * 1000;
       console.log("✅ Access token:", data.access_token);
